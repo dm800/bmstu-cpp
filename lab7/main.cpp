@@ -12,5 +12,5 @@ int main() {
     set.concat(&set2);
     InterSet set3 = set.copy();
     std::cout << set3.Internumber() << "\n";
-    std::cout << set3.contains(2) << " " <<  set3.contains(7) << "\n";
+    std::cout << set3.contains(2) << " " <<  set3.contains(12) << "\n";
 }

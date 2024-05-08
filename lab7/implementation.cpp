@@ -38,7 +38,7 @@ Inter* InterSet::at(int ind) {
 }
 
 bool InterSet::contains(int x) {
-    for (int i = 0; i < this->size;i++) {
+    for (int i = 0; i < this->count;i++) {
         Inter* cur = this->at(i);
         if (cur->a < x && cur->b > x) {
             return true;
@@ -63,7 +63,6 @@ void InterSet::extend() {
     for (int i = 0; i < this->size;i++) {
         set[i] = this->set[i];
     }
-    this->set = set;
 }
 
 InterSet InterSet::copy() {
