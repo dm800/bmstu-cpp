@@ -2,7 +2,7 @@ template<typename T>
 class Elem 
 {
     public:
-        Elem(T val);
+        Elem(T);
         T elem;
         Elem* prev;
         Elem* next;

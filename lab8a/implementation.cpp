@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iostream>
 
-template<typename T>
+template<typename T> requires std::equality_comparable<T>
 Seq<T>::Seq(std::vector<T> vals) {
     this->values = vals;
 }
