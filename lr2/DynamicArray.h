@@ -4,9 +4,7 @@
 template <class T> class DynamicArray
 {
 private:
-	T* arr;
 	int size;
-
 
 	void Copy(const DynamicArray& Array) {
 		arr = new T[Array.size];
@@ -17,6 +15,7 @@ private:
 		}
 	}
 public:
+	T* arr;
 	int count;
 
 	DynamicArray() {
@@ -40,6 +39,8 @@ public:
 		}
 		this->count = size;
 	}
+
+
 	DynamicArray(const DynamicArray& Array)
 	{
 		Copy(Array);
@@ -77,25 +78,44 @@ public:
 
 
 
-	T Get(int index)
+	T& Get(int index)
 	{
 		if (index < 0 || index >= size)
 			throw std::out_of_range("Index is out of range");
 		return arr[index];
 	}
-	T operator[](int index)
-	{
-		return Get(index);
+	T& operator[](int index) {
+		std::cout << "getting index";
+		if (index < 0 || index >= size) {
+			throw std::out_of_range("Index is out of range");
+		}
+		return arr[index];
 	}
 	void Resize(int newSize)
 	{
 		if (newSize < 0)
 			throw std::out_of_range("Size of array must be more then 0");
 		T* buffer = new T[newSize];
-		for (int i = 0; i < newSize && i < size;i++)
+		for (int i = 0; i < newSize && i < count;i++)
 			buffer[i] = arr[i];
 		size = newSize;
 		arr = buffer;
+	}
+
+	void Swap(int i, int j) {
+		if (i < 0 || i >= count || j < 0 || j >= count) {
+			throw std::out_of_range("Index is out of range");
+		}
+		T temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+
+	T* GetPtr(int index) {
+		if (index < 0 || index >= size) {
+			throw std::out_of_range("Index is out of range");
+		}
+		return &arr[index];
 	}
 };
 

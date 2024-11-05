@@ -4,10 +4,9 @@
 template <class T> class ArraySequence :public Sequence<T>//, public IEnumerable<T>
 {
 	int index=0;
-	DynamicArray<T>* _array;
+
 public:
-
-
+	DynamicArray<T>* _array;
 	ArraySequence (T* items, int count)
 	{
 		_array= new DynamicArray<T>(items, count);
@@ -16,12 +15,12 @@ public:
 	{
 		_array = new DynamicArray<T>(0);
 	}
-	ArraySequence (const ArraySequence  <T>& list )
+	ArraySequence (const Sequence <T>* list )
 	{
-		int n = list._array->getCount();
+		int n = list->GetLength();
 		T* temp = new T[n];
 		for (int i = 0; i < n;i++)
-			temp[i] = list._array->Get(i);
+			temp[i] = list->Get(i);
 		_array= new DynamicArray<T>(temp, n);
 	}
 	T GetFirst() override
@@ -50,13 +49,27 @@ public:
 			std::cout << "index out of Range ";
 		}
 	}
-	T Get(int index)override
+	T Get(int index) const override
 	{
 		try
 		{
 			if (_array->getCount() <= 0 || index>=_array->getCount())
 				throw 1;
 			return _array->Get(index);
+		}
+		catch (int e)
+		{
+			std::cout << "index out of Range ";
+		}
+	}
+
+	T* GetPtr(int index) const override
+	{
+		try
+		{
+			if (_array->getCount() <= 0 || index >= _array->getCount())
+				throw 1;
+			return _array->GetPtr(index);
 		}
 		catch (int e)
 		{
@@ -91,14 +104,14 @@ public:
 			std::cout << "index out of Range ";
 		}
 	}
-	int GetLength()override
+	int GetLength() const override
 	{
 		return _array->getCount();
 	}
 	Sequence<T>* Append(T item) override {
 		if (_array->getCount() == _array->getSize())
 		{
-			_array->Resize((int)(_array->getSize() * 1.5));
+			_array->Resize((int)(_array->getSize() * 1.5 + 1));
 		}
 		++_array->count;
 		_array->Set(_array->getCount() - 1, item);
@@ -160,15 +173,15 @@ public:
 		}
 		return *this;
 	}
+
 	T& operator[](int index) const {
 		return (*_array)[index];
 	}
 
+	void Swap(int i, int j) {
+		_array->Swap(i, j);
+	}
 
-	/*
-
-	*/
-	
 	T GetCurrent()
 	{
 		return _array->Get(index);
