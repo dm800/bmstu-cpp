@@ -71,6 +71,8 @@ private:
 public:
 
     QuickSorter(int (*comp)(const T*, const T*)) {
+        count = 0;
+        array = nullptr;
         comparator = comp;
     }
 

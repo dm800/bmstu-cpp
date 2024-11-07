@@ -1,6 +1,7 @@
 #pragma once
 #include "SeqGenTest.h"
 #include "QuickSortTest.h"
+#include "HeapSortTest.h"
 
 
 inline void FullCheck() {
@@ -8,4 +9,6 @@ inline void FullCheck() {
     SeqGenHighCheck();
     QuickSortGeneralCheck();
     QuickSortDiffCheck();
+    HeapSortGeneralCheck();
+    HeapSortDiffCheck();
 }
