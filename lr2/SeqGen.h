@@ -1,5 +1,5 @@
 #pragma once
-#include "ArraySequence.h"
+#include "Base/ArraySequence.h"
 
 template <class T>
 ArraySequence<T>* SeqGen(int n)

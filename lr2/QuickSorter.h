@@ -1,91 +1,94 @@
 #pragma once
-#include "ISorter.h"
+
+#include "Base/ISorter.h"
 
 
 template <typename T>
 class QuickSorter : public ISorter<T> {
 private:
 
-    int* array;
+    T** array;
+    int count;
 
     int (*comparator)(const T* a, const T* b) = nullptr;
 
     void swap(int i, int j) {
-        int temp = array[i];
+        T* temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
 
-    int partition(int low, int high, Sequence<T>* arr) {
-        int mid = (low + high) / 2;
-        T* mide = arr->GetPtr(mid);
-        T* lowe = arr->GetPtr(low);
-        T* highe = arr->GetPtr(high);
-        if (comparator(mide, lowe) < 0) {
+    struct partans {
+        int lt;
+        int gt;
+    };
+
+    partans partition(int low, int high, Sequence<T>* arr) {
+        int mid = low + (high - low) / 2;
+        if (comparator(array[mid], array[low]) < 0) {
             swap(low, mid);
         }
-        if (comparator(highe, lowe) < 0) {
+        count++;
+        if (comparator(array[high], array[low]) < 0) {
             swap(low, high);
         }
-        if (comparator(highe, mide) < 0) {
+        count++;
+        if (comparator(array[high], array[mid]) < 0) {
             swap(mid, high);
         }
+        count++;
         swap(mid, high);
-        T* piv = arr->GetPtr(high);
-        int i = low;
+        T* piv = array[high];
+        int lt = low;
         int j = low;
-        while (j < high) {
-            if (comparator(arr->GetPtr(j), piv) < 0) {
-                swap(i, j);
-                i++;
+        int gt = high;
+        while (j <= gt) {
+            if (comparator(array[j], piv) < 0) {
+                swap(lt, j);
+                lt++;
+                j++;
             }
-            j++;
+            else if (comparator(array[j], piv) > 0) {
+                swap(gt, j);
+                gt--;
+            }
+            else {
+                j++;
+            }
+            count++;
         }
-        swap(i, high);
-        return i;
+        return { lt, gt };
     }
 
     void QuickSort(int low, int high, Sequence<T>* arr) {
         if (low < high) {
-            int pi = partition(low, high, arr);
-            QuickSort(low, pi - 1, arr);
-            QuickSort(pi + 1, high, arr);
+            auto p = partition(low, high, arr);
+            QuickSort(low, p.lt - 1, arr);
+            QuickSort(p.gt + 1, high, arr);
         }
     }
 
-    /* void QuickSort(Sequence<T>* arr, int low, int high) {
-    std::stack<std::pair<int, int>> stack;
-    stack.push({low, high});
-
-    while (!stack.empty()) {
-    auto [low, high] = stack.top();
-    stack.pop();
-
-    if (low < high) {
-    int pi = partition(low, high, arr);
-    stack.push({low, pi - 1});
-    stack.push({pi + 1, high});
-    }
-    }
-    } */
-
 public:
+
     QuickSorter(int (*comp)(const T*, const T*)) {
         comparator = comp;
     }
-    Sequence<T>* Sort(Sequence<T>* arr) override {
-        array = new int[arr->GetLength()];
-        for (int i = 0; i < arr->GetLength(); i++) {
-            array[i] = i;
-        }
 
+    Sequence<T>* Sort(Sequence<T>* arr) override {
+        count = 0;
+        array = new T*[arr->GetLength()];
+        for (int i = 0; i < arr->GetLength(); i++) {
+            array[i] = arr->GetPtr(i);
+        }
         QuickSort(0, arr->GetLength() - 1, arr);
 
         auto* newarr = new ArraySequence<T>();
 
         for (int i = 0; i < arr->GetLength(); i++) {
-            newarr->Append(arr->Get(array[i]));
+            newarr->Append(*array[i]);
         }
+
+        //std::cout << "Made " << count << " comparisons" << std::endl;
 
         return newarr;
     }
